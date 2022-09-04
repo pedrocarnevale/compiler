@@ -4,8 +4,12 @@
 #include<stdio.h>
 #include<iostream>
 #include<string.h>
+#include<unordered_map>
+
+using namespace std;
 
 const int MAX_CONSTS = 500;
+const int MAX_NUM_LEN = 10;
 
 
 typedef enum{
@@ -21,32 +25,39 @@ UNKNOWN,
 ENDFILE
 } t_token;
 
-typedef struct { 
-  int  type; // 0-char, 1-int, 2- string       
-  union {
-    char   cVal;
-    int    nVal; 
-    char * sVal;       
-  } _; 
+typedef struct T_CONST{ 
+  public:
+    int type; // 0-char, 1-int, 2- string       
+    union {
+      char cVal;
+      int nVal; 
+      char* sVal;       
+    } _; 
 } t_const;
 
-// global variable
+// global variables
+extern FILE *program_file;
 extern t_const vConsts[MAX_CONSTS];
 extern int nNumConsts;
 extern char nextChar;
 extern t_token token; 
-extern int tokenSecundario;
+extern int secondaryToken;
+extern unordered_map<int, string> terminalNames;
+extern unordered_map<string,t_token> t_tokenReservedWords;
+extern unordered_map<string,int> secondatyTokenId;
+extern string tokenString;
+
 
 // functions
-t_token searchKeyWord( string name );
-int searchName( string name );
-int addCharConst(char c); 
-int addIntConst(int n);
-int addStringConst(string s);
-char getCharConst(int n); 
-int getIntConst(int n); 
-char *getStringConst(int n);
-char readChar(void);
-t_token nextToken(void); 
+t_token searchKeyWord(string name); //OK
+int searchName(string name); // OK
+int addCharConst(char c); //OK
+int addIntConst(int n); // ok
+int addStringConst(char* s);// ok
+char getCharConst(int n); // ok
+int getIntConst(int n);   // ok
+char *getStringConst(int n); // ok
+char readChar(); //ok
+t_token nextToken(); 
 
 #endif
