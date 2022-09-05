@@ -23,8 +23,7 @@ int main(int argc, const char * argv[]) {
     token = ARRAY;
     while(token != ENDFILE){
       token = nextToken();
-      // cout << token << endl;
     }
     
-    cout << "SUCESSO! O programa funcionou corretamente =]" << endl;
+    cout << "Program finished!!" << endl;
 } 
