@@ -46,6 +46,7 @@ extern unordered_map<int, string> terminalNames;
 extern unordered_map<string,t_token> t_tokenReservedWords;
 extern unordered_map<string,int> secondatyTokenId;
 extern string tokenString;
+extern int line;
 
 
 // functions
