@@ -3,6 +3,8 @@
         "unordered_map": "cpp",
         "algorithm": "cpp",
         "ostream": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "random": "cpp",
+        "iosfwd": "cpp"
     }
 }
