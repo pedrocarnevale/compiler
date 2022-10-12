@@ -18,6 +18,7 @@ string tokenString = "";
 unordered_map<int, string> terminalNames;
 unordered_map<string,t_token> t_tokenMap;
 unordered_map<string,int> secondatyTokenId;
+int line = 1;
 
 void setTerminalNames(){
   terminalNames[ARRAY] = "ARRAY";
@@ -145,6 +146,7 @@ char* getStringConst(int n){
 char readChar(){
 	char c =  fgetc(program_file);
   // cout << c << endl;
+  line++;
   return c;
 }
 

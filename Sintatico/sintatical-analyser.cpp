@@ -50,14 +50,14 @@ void parseFunction(){
                 pilha.push(Action[pilha.top()][ruleLeftPart[r]]);
             }
             else{
-                cout << "Error" << line << endl;
+                cout << "Error, in line:" << line << endl;
                 exit(-1);
             }
             q = pilha.top();
         }
 
         else{
-            cout << "Error:" << line << endl;
+            cout << "Error, in line:"<< line << endl;
             exit(-1);
         }
     }while(q != final_state);
@@ -77,16 +77,16 @@ void startParameters(){
     fRuleLeftPart.open("ruleLeftPart.csv", ios::in);
     
     vector<int> row;
-    string line, word, temp;
+    string lineStr, word, temp;
     int rowNum = 0, colNum = 0;
 
-    getline(fAction, line);
+    getline(fAction, lineStr);
   
     while (fAction >> temp) {
         rowNum = 0;
         
-        getline(fAction, line);
-        stringstream s(line);
+        getline(fAction, lineStr);
+        stringstream s(lineStr);
 
         while (getline(s, word, ',')) {
             if (word == " " || word == "") Action[rowNum][colNum] = 0;
@@ -98,8 +98,8 @@ void startParameters(){
     }
 
     while (fRuleSize >> temp) {
-        getline(fRuleSize, line);
-        stringstream s(line);
+        getline(fRuleSize, lineStr);
+        stringstream s(lineStr);
 
         while (getline(s, word, ',')) {
             if (!word.empty()) rulesize.push_back(stoi(word));
@@ -107,8 +107,8 @@ void startParameters(){
     }
 
     while (fRuleLeftPart >> temp) {
-        getline(fRuleLeftPart, line);
-        stringstream s(line);
+        getline(fRuleLeftPart, lineStr);
+        stringstream s(lineStr);
 
         while (getline(s, word, ',')) {
             if (!word.empty()) ruleLeftPart.push_back(nonTerminalVariablesMap[word]);

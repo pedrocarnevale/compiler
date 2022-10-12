@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <fstream>
 #include "Lexico/lexical_analyser.h"
+#include "Sintatico/sintatical-analyser.h"
 
 extern FILE* program_file;
 
@@ -19,6 +20,8 @@ int main(int argc, const char * argv[]) {
         cout << "The file does not exist or could not be opened" << endl;
         exit(1);
     }
+
+    parseFunction();
 
     token = ARRAY;
     while(token != ENDFILE){
