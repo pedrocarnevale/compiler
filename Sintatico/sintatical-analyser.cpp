@@ -24,11 +24,13 @@ void parseFunction(vector<unordered_map<int,int>>& actionTable, vector<int>& rul
             if(IS_SHIFT(p)){
                 sintaticalStack.push(p);
                 a = nextToken();
+                cout<<"next token: "<<a<<endl;
             }
 
             else if(IS_REDUCTION(p)){
                 int r = RULE(p);
-                //cout << r << endl;
+                cout << "Rule: " << r << endl;
+
                 for(int i = 0; i<ruleSize[r]; i++){
                     sintaticalStack.pop();
                 }

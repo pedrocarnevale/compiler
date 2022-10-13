@@ -370,7 +370,7 @@ t_token nextToken(){
       token = UNKNOWN;
     }
   }
-  cout << "read:" << tokenString << "\ntoken:" << token << endl;
+  cout << endl <<"Read: " << tokenString << "\nToken: " << token << endl;
   return token;
 }
 

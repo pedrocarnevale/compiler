@@ -7,5 +7,5 @@ function main(arg:integer):integer
 	y = 2;
    	z = 3;
    	z = x - y;
-    	z = ((z * 3) - 2) / 5;
+    z = ((z * 3) - 2) / 5;
 }
