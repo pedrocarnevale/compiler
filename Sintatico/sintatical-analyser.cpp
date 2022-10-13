@@ -7,16 +7,13 @@
 #include <iostream>
 
 using namespace std;
-#define IS_SHIFT(p) ((p)>0)
-#define IS_REDUCTION(p) ((p)<0)
-#define RULE(p) (-(p))
 
-stack<int> pilha;
+stack<int> sintaticalStack;
 
 void parseFunction(vector<unordered_map<int,int>>& actionTable, vector<int>& ruleSize, vector<int>& ruleLeftPart){
     int final_state = 1;
     int q = 0;
-    pilha.push(q);
+    sintaticalStack.push(q);
     int a = nextToken();
 
     do{
@@ -24,7 +21,7 @@ void parseFunction(vector<unordered_map<int,int>>& actionTable, vector<int>& rul
             int p = actionTable[q][a];
 
             if(IS_SHIFT(p)){
-                pilha.push(p);
+                sintaticalStack.push(p);
                 a = nextToken();
             }
 
@@ -32,17 +29,17 @@ void parseFunction(vector<unordered_map<int,int>>& actionTable, vector<int>& rul
                 int r = RULE(p);
                 //cout << r << endl;
                 for(int i = 0; i<ruleSize[r]; i++){
-                    pilha.pop();
+                    sintaticalStack.pop();
                 }
 
-                pilha.push(actionTable[pilha.top()][ruleLeftPart[r]]);
+                sintaticalStack.push(actionTable[sintaticalStack.top()][ruleLeftPart[r]]);
             }
 
             else{
                 cout << "Error, in line:" << line << endl;
                 exit(-1);
             }
-            q = pilha.top();
+            q = sintaticalStack.top();
         }
 
         else{

@@ -8,7 +8,6 @@
 extern FILE* program_file;
 
 using namespace std;
-#define ACTION_TABLE_SIZE 184
 
 int main(int argc, const char * argv[]) {
     Utils u;

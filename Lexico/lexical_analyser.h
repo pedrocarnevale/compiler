@@ -1,5 +1,4 @@
-#ifndef LEXICAL_ANALYSER
-#define LEXICAL_ANALYSER
+#pragma once
 
 #include<stdio.h>
 #include<iostream>
@@ -60,5 +59,3 @@ int getIntConst(int n);   // ok
 char *getStringConst(int n); // ok
 char readChar(); //ok
 t_token nextToken(); 
-
-#endif
