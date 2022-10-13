@@ -22,7 +22,6 @@ int main(int argc, const char * argv[]) {
     }
 
     parseFunction();
-
     token = ARRAY;
     while(token != ENDFILE){
       token = nextToken();

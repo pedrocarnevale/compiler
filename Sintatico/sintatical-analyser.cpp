@@ -1,5 +1,6 @@
 #include "sintatical-analyser.h"
 #include "../Lexico/lexical_analyser.h"
+#include "../utils.h"
 #include <stack>
 #include <vector>
 #include <unordered_map>
@@ -9,19 +10,14 @@
 #include <sstream>
 
 using namespace std;
-
-#define ACTION_TABLE_SIZE 184
 #define IS_SHIFT(p) ((p)>0)
 #define IS_REDUCTION(p) ((p)<0)
 #define RULE(p) (-(p))
 
-vector<string> nonTerminalVariables = {"ACCEPT","END","P","LDE","DE","DF","DT","DC","LI","DV","LP","B","LDV","LS","S","E","L","R","K","F","LE","LV","T","TRU","FALS","CHR","STR","NUM","IDD","IDU","ID","NB","MF","MC","NF","MT","ME","MW","MA"};
-unordered_map<string, int> nonTerminalVariablesMap;
-
 stack<int> pilha;
-vector<unordered_map<int,int>> Action(ACTION_TABLE_SIZE);
-vector<int> rulesize;
+vector<int> ruleSize;
 vector<int> ruleLeftPart;
+vector<unordered_map<int,int>> actionTable(ACTION_TABLE_SIZE);
 
 void parseFunction(){
     int final_state = 1;
@@ -29,11 +25,12 @@ void parseFunction(){
     pilha.push(q);
     int a = nextToken();
 
-    startParameters();
+    startParameters(ruleSize, ruleLeftPart);
+    startActionTable(actionTable);
 
     do{
-        if(Action[q].count(a) > 0){
-            int p = Action[q][a];
+        if(actionTable[q].count(a) > 0){
+            int p = actionTable[q][a];
 
             if(IS_SHIFT(p)){
                 pilha.push(p);
@@ -42,12 +39,12 @@ void parseFunction(){
 
             else if(IS_REDUCTION(p)){
                 int r = RULE(p);
-
-                for(int i = 0; i<rulesize[r]; i++){
+                cout << r << endl;
+                for(int i = 0; i<ruleSize[r]; i++){
                     pilha.pop();
                 }
 
-                pilha.push(Action[pilha.top()][ruleLeftPart[r]]);
+                pilha.push(actionTable[pilha.top()][ruleLeftPart[r]]);
             }
             else{
                 cout << "Error, in line:" << line << endl;
@@ -61,57 +58,4 @@ void parseFunction(){
             exit(-1);
         }
     }while(q != final_state);
-}
-
-void startParameters(){
-    int num = 63;
-    for (string str: nonTerminalVariables){
-        nonTerminalVariablesMap[str] = num;
-        num++;
-    }
-
-    fstream fAction, fRuleSize, fRuleLeftPart;
-  
-    fAction.open("action.csv", ios::in);
-    fRuleSize.open("ruleSize.csv", ios::in);
-    fRuleLeftPart.open("ruleLeftPart.csv", ios::in);
-    
-    vector<int> row;
-    string lineStr, word, temp;
-    int rowNum = 0, colNum = 0;
-
-    getline(fAction, lineStr);
-  
-    while (fAction >> temp) {
-        rowNum = 0;
-        
-        getline(fAction, lineStr);
-        stringstream s(lineStr);
-
-        while (getline(s, word, ',')) {
-            if (word == " " || word == "") Action[rowNum][colNum] = 0;
-            else Action[rowNum][colNum] = stoi(word);
-            rowNum++;
-        }
-
-        colNum++;
-    }
-
-    while (fRuleSize >> temp) {
-        getline(fRuleSize, lineStr);
-        stringstream s(lineStr);
-
-        while (getline(s, word, ',')) {
-            if (!word.empty()) rulesize.push_back(stoi(word));
-        }
-    }
-
-    while (fRuleLeftPart >> temp) {
-        getline(fRuleLeftPart, lineStr);
-        stringstream s(lineStr);
-
-        while (getline(s, word, ',')) {
-            if (!word.empty()) ruleLeftPart.push_back(nonTerminalVariablesMap[word]);
-        }
-    }
 }
