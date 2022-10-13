@@ -7,6 +7,64 @@
 #include "Lexico/lexical_analyser.h"
 
 using namespace std;
+
+void Utils::Error(error code){
+    
+    switch(code){
+        case ERR_NO_DECL:
+            cout << "Not declared variable";
+            break;
+        case ERR_REDCL:
+            cout << "Variable already declared";
+            break;
+        case ERR_TYPE_EXPECTED:
+            cout << "Type Expected: A type was not declared previously";
+            break;
+        case ERR_BOOL_TYPE_EXPECTED:
+            cout << "Bool Expected: Boolean type is expected";
+            break;
+        case ERR_INVALID_TYPE:
+            cout << "Invalid Type: The type is invalid";
+            break;
+        case ERR_TYPE_MISMATCH:
+            cout << "Type Mismatch: The type is not invalid in the operation";
+            break;
+        case ERR_KIND_NOT_STRUCT:
+            cout << "Kind not Struct: Only struct types are allowed";
+            break;
+        case ERR_FIELD_NOT_DECL:
+            cout << "Field not Declared: The field was not declared";
+            break;
+        case ERR_KIND_NOT_ARRAY:
+            cout << "Kind not Array: The operation can be only realized in a array";
+            break;
+        case ERR_INVALID_INDEX_TYPE:
+            cout << "Invalid Index: The index in the array is invalid";
+            break;
+        case ERR_KIND_NOT_VAR:
+            cout << "Kind not Var: The operation is only valid with var types";
+            break;
+        case ERR_KIND_NOT_FUNCTION:
+            cout << "Kind not Function: The operation is only valid with function types";
+            break;
+        case ERR_TOO_FEW_ARGS:
+            cout << "Too Few Args: The number of specified parameters are not enough";
+            break;
+        case ERR_TOO_MANY_ARGS:
+            cout << "Too Many Args: The number of parameters is bigger than expected";
+            break;
+        case ERR_PARAM_TYPE:
+            cout << "Param Type: The specified type to the parameter is invalid";
+            break;
+        case ERR_RETURN_TYPE_MISMATCH:
+            cout << "Return Type Mismatch: The return type is not the one specified in the function" << endl;
+            break;
+        default:
+            break;
+    }
+    cout << endl;
+}
+
 void Utils::startParameters(vector<int>& ruleSize, vector<int>& ruleLeftPart){
     ruleSize = {2,2,2,1,1,1,1,10,9,10,5,5,3,3,1,5,5,3,0,4,3,3,2,2,1,2,1,2,2,7,8,6,9,2,2,3,3,3,1,4,3,3,3,3,3,3,1,3,3,1,3,3,1,1,2,2,2,2,3,5,2,2,1,1,1,1,1,3,1,0,3,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0};
     ruleLeftPart = {ACCEPT,P,LDE,LDE,DE,DE,DE,DF,DT,DT,DT,DC,DC,LI,LI,DV,LP,LP,LP,B,B,B,B,LDV,LDV,LS,LS,S,S,S,S,S,S,S,S,S,E,E,E,E,L,L,L,L,L,L,L,R,R,R,K,K,K,F,F,F,F,F,F,F,F,F,F,F,F,F,F,LE,LE,LE,LV,LV,LV,T,T,T,T,T,TRU,FALS,CHR,STR,NUM,IDD,IDU,ID,NB,MF,MC,NF,MT,ME,MW,MA};

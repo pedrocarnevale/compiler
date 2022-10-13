@@ -1,5 +1,6 @@
 #include "sintatical-analyser.h"
 #include "../Lexico/lexical_analyser.h"
+#include "../Semantico/semantic_analyser.h"
 #include "../utils.h"
 #include <stack>
 #include <vector>
@@ -33,6 +34,7 @@ void parseFunction(vector<unordered_map<int,int>>& actionTable, vector<int>& rul
                 }
 
                 sintaticalStack.push(actionTable[sintaticalStack.top()][ruleLeftPart[r]]);
+                semantics(r);
             }
 
             else{
