@@ -30,7 +30,7 @@ void parseFunction(vector<unordered_map<int,int>>& actionTable, vector<int>& rul
 
             else if(IS_REDUCTION(p)){
                 int r = RULE(p);
-                cout << r << endl;
+                //cout << r << endl;
                 for(int i = 0; i<ruleSize[r]; i++){
                     pilha.pop();
                 }
