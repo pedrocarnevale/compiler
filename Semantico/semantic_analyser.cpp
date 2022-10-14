@@ -8,7 +8,6 @@ using namespace std;
 stack<t_attrib> StackSem;
 pobject curFunction;
 int nFuncs = 0;
-FILE *out;
 //simbol table
 pobject SymbolTable[MAX_NEST_LEVEL];
 pobject SymbolTableLast[MAX_NEST_LEVEL];
@@ -342,14 +341,10 @@ void semantics(int rule){
             f->_.Function.nParams = LP_.nSize;
             f->_.Function.nVars = LP_.nSize;
             curFunction = f;
-            
-            fprintf(out,"BEGIN_FUNC %d %d %d\n",f->_.Function.nIndex,
-                    f->_.Function.nParams,
-                    f->_.Function.nVars-f->_.Function.nParams);
             break;
         case DF_RULE:
             endBlock();
-            fprintf(out,"END_FUNC\n");
+            
             break;
         case S_BLOCK_RULE:
             endBlock();
@@ -357,13 +352,11 @@ void semantics(int rule){
         case S_E_SEMICOLON:
             E_ = StackSem.top();
             StackSem.pop();
-            fprintf(out,"\tPOP\n");
             break;
         case MT_RULE:
             l = newLabel();
             MT_._.MT.label = l;
             MT_.nont = MT;
-            fprintf(out,"\tTJMP_FW L%d\n",l);
             StackSem.push(MT_);
             break;
         case S_IF_RULE:
@@ -378,8 +371,6 @@ void semantics(int rule){
                 u.Error(ERR_BOOL_TYPE_EXPECTED);
             }
             
-            fprintf(out,"L%d\n",MT_._.MT.label);
-            
             break;
         case ME_RULE:
             MT_ = StackSem.top();
@@ -388,8 +379,6 @@ void semantics(int rule){
             ME_._.ME.label = l2;
             ME_.nont = ME;
             StackSem.push(ME_);
-            
-            fprintf(out,"\tTJMP_FW L%d\nL%d\n",l2,l1);
             break;
         case S_IF_ELSE_RULE:
             ME_ = StackSem.top();
@@ -405,13 +394,11 @@ void semantics(int rule){
             if( !CheckTypes(t,pBool)){
                 u.Error(ERR_BOOL_TYPE_EXPECTED);
             }
-            fprintf(out,"\tL%d\n",l);
             break;
         case MW_RULE:
             l = newLabel();
             MW_._.MW.label = l;
             StackSem.push(MW_);
-            fprintf(out,"\tL%d\n",l);
             break;
         case S_WHILE_RULE:
             MT_ = StackSem.top();
@@ -428,8 +415,6 @@ void semantics(int rule){
             if( !CheckTypes(t,pBool)){
                 u.Error(ERR_BOOL_TYPE_EXPECTED);
             }
-            
-            fprintf(out,"\tJMP_BW L%d\nL%d\n",l1,l2);
             break;
         case S_DO_WHILE_RULE:
             E_ = StackSem.top();
@@ -443,8 +428,6 @@ void semantics(int rule){
             if( !CheckTypes(t,pBool)){
                 u.Error(ERR_BOOL_TYPE_EXPECTED);
             }
-            
-            fprintf(out,"\tNOT\n\tTJMP_BW L%d\n",l);
             break;
         case S_BREAK_RULE:
             MT_ = StackSem.top();
@@ -457,7 +440,6 @@ void semantics(int rule){
             if(!CheckTypes(curFunction->_.Function.pRetType,E_._.E.type)){
                 u.Error(ERR_RETURN_TYPE_MISMATCH);
             }
-            fprintf(out,"\tRET\n");
             break;
         case E_AND_RULE:
             L_ = StackSem.top();
@@ -475,7 +457,6 @@ void semantics(int rule){
             E0_._.E.type = pBool;
             E0_.nont = E;
             StackSem.push(E0_);
-            fprintf(out,"\tAND\n");
             break;
         case E_OR_RULE:
             L_ = StackSem.top();
@@ -493,7 +474,6 @@ void semantics(int rule){
             E0_._.E.type = pBool;
             E0_.nont = E;
             StackSem.push(E0_);
-            fprintf(out,"\tOR\n");
             break;
         case E_L_RULE:
             L_ = StackSem.top();
@@ -514,9 +494,6 @@ void semantics(int rule){
             L0_._.L.type = pBool;
             L0_.nont = L;
             StackSem.push(L0_);
-            
-            fprintf(out,"\tLT\n");
-            
             break;
         case L_GREATER_THAN_RULE:
             R_ = StackSem.top();
@@ -530,7 +507,6 @@ void semantics(int rule){
             L0_._.L.type = pBool;
             L0_.nont = L;
             StackSem.push(L0_);
-            fprintf(out,"\tGT\n");
             break;
         case L_LESS_EQUAL_RULE:
             R_ = StackSem.top();
@@ -544,7 +520,6 @@ void semantics(int rule){
             L0_._.L.type = pBool;
             L0_.nont = L;
             StackSem.push(L0_);
-            fprintf(out,"\tLE\n");
             break;
         case L_GREATER_EQUAL_RULE:
             R_ = StackSem.top();
@@ -558,7 +533,6 @@ void semantics(int rule){
             L0_._.L.type = pBool;
             L0_.nont = L;
             StackSem.push(L0_);
-            fprintf(out,"\tGE\n");
             break;
         case L_EQUAL_EQUAL_RULE:
             R_ = StackSem.top();
@@ -572,7 +546,6 @@ void semantics(int rule){
             L0_._.L.type = pBool;
             L0_.nont = L;
             StackSem.push(L0_);
-            fprintf(out,"\tEQ\n");
             break;
         case L_NOT_EQUAL_RULE:
             R_ = StackSem.top();
@@ -586,7 +559,6 @@ void semantics(int rule){
             L0_._.L.type = pBool;
             L0_.nont = L;
             StackSem.push(L0_);
-            fprintf(out,"\tNE\n");
             break;
         case L_R_RULE:
             R_ = StackSem.top();
@@ -612,7 +584,6 @@ void semantics(int rule){
             R0_._.R.type = R1_._.R.type;
             R0_.nont = R;
             StackSem.push(R0_);
-            fprintf(out,"\tADD\n");
             break;
         case R_MINUS_RULE:
             K_ = StackSem.top();
@@ -631,7 +602,6 @@ void semantics(int rule){
             R0_._.R.type = R1_._.R.type;
             R0_.nont = R;
             StackSem.push(R0_);
-            fprintf(out,"\tSUB\n");
             break;
         case R_K_RULE:
             K_ = StackSem.top();
@@ -657,7 +627,6 @@ void semantics(int rule){
             K0_._.K.type = K1_._.K.type;
             K0_.nont = K;
             StackSem.push(K0_);
-            fprintf(out,"\tMUL\n");
             break;
         case K_DIVIDE_RULE:
             F_ = StackSem.top();
@@ -676,7 +645,6 @@ void semantics(int rule){
             K0_._.K.type = K1_._.K.type;
             K0_.nont = K;
             StackSem.push(K0_);
-            fprintf(out,"\tDIV\n");
             break;
         case K_F_RULE:
             F_ = StackSem.top();
@@ -694,7 +662,6 @@ void semantics(int rule){
             F_._.F.type = LV_._.LV.type;
             F_.nont = F;
             StackSem.push(F_);
-            fprintf(out,"\tDE_REF %d\n",n);
             break;
         case F_LEFT_PLUS_PLUS_RULE:
             LV_ = StackSem.top();
@@ -706,8 +673,6 @@ void semantics(int rule){
             
             F_._.F.type = pInt;
             F_.nont = F;
-            fprintf(out,"\tDUP\n\tDUP\n\tDE_REF 1\n");
-            fprintf(out,"\tINC\n\tSTORE_REF 1\n\tDE_REF 1\n");
             StackSem.push(F_);
             break;
         case F_LEFT_MINUS_MINUS_RULE:
@@ -721,8 +686,6 @@ void semantics(int rule){
             F_._.F.type = LV_._.LV.type;
             F_.nont = F;
             StackSem.push(F_);
-            fprintf(out,"\tDUP\n\tDUP\n\tDE_REF 1\n");
-            fprintf(out,"\tDEC\n\tSTORE_REF 1\n\tDE_REF 1\n");
             break;
         case F_RIGHT_PLUS_PLUS_RULE:
             LV_ = StackSem.top();
@@ -735,9 +698,6 @@ void semantics(int rule){
             F_._.F.type = LV_._.LV.type;
             F_.nont = F;
             StackSem.push(F_);
-            fprintf(out,"\tDUP\n\tDUP\n\tDE_REF 1\n");
-            fprintf(out,"\tINC\n\tSTORE_REF 1\n\tDE_REF 1\n");
-            fprintf(out,"\tDEC\n");
             break;
         case F_RIGHT_MINUS_MINUS_RULE:
             LV_ = StackSem.top();
@@ -750,9 +710,6 @@ void semantics(int rule){
             F_._.F.type = t;
             F_.nont = F;
             StackSem.push(F_);
-            fprintf(out,"\tDUP\n\tDUP\n\tDE_REF 1\n");
-            fprintf(out,"\tDEC\n\tSTORE_REF 1\n\tDE_REF 1\n");
-            fprintf(out,"\tINC\n");
             break;
         case F_PARENTHESIS_E_RULE:
             E_ = StackSem.top();
@@ -774,7 +731,6 @@ void semantics(int rule){
             F0_._.F.type = t;
             F0_.nont = F;
             StackSem.push(F0_);
-            fprintf(out,"\tNEG\n");
             break;
         case F_NOT_F_RULE:
             F1_ = StackSem.top();
@@ -788,7 +744,6 @@ void semantics(int rule){
             F0_._.F.type = t;
             F0_.nont = F;
             StackSem.push(F0_);
-            fprintf(out,"\tNOT\n");
             break;
         case F_TRUE_RULE:
             TRU_ = StackSem.top();
@@ -796,7 +751,6 @@ void semantics(int rule){
             F_._.F.type = pBool;
             F_.nont = F;
             StackSem.push(F_);
-            fprintf(out,"\tLOAD_TRUE\n");
             break;
         case F_FALSE_RULE:
             FALS_ = StackSem.top();
@@ -804,7 +758,6 @@ void semantics(int rule){
             F_._.F.type = pBool;
             F_.nont = F;
             StackSem.push(F_);
-            fprintf(out,"\tLOAD_FALSE\n");
             break;
         case F_CHR_RULE:
             CHR_ = StackSem.top();
@@ -813,7 +766,6 @@ void semantics(int rule){
             F_.nont = F;
             StackSem.push(F_);
             n = secondaryToken;
-            fprintf(out,"\tLOAD_CONST %d\n",n);
             break;
         case F_STR_RULE:
             STR_ = StackSem.top();
@@ -822,7 +774,6 @@ void semantics(int rule){
             F_.nont = F;
             StackSem.push(F_);
             n = secondaryToken;
-            fprintf(out,"\tLOAD_CONST %d\n",n);
             break;
         case F_NUM_RULE:
             STR_ = StackSem.top();
@@ -831,7 +782,6 @@ void semantics(int rule){
             F_.nont = F;
             StackSem.push(F_);
             n = secondaryToken;
-            fprintf(out,"\tLOAD_CONST %d\n",n);
             break;
         case LV_DOT_RULE:
             ID_ = StackSem.top();
@@ -866,7 +816,6 @@ void semantics(int rule){
             
             LV0_.nont = LV;
             StackSem.push(LV0_);
-            fprintf(out,"\tADD %d\n",p->_.Field.nIndex);
             break;
         case LV_SQUARE_RULE:
             E_ = StackSem.top();
@@ -887,7 +836,6 @@ void semantics(int rule){
             else{
                 LV0_._.LV.type = t->_.Array.pElemType;
                 n = t->_.Array.nSize/t->_.Array.nNumElems;
-                fprintf(out,"\tMUL %d\n\tADD\n",n);
             }
             
             if( !CheckTypes(E_._.E.type,pInt)){
@@ -914,10 +862,8 @@ void semantics(int rule){
             }
             LV_.nont = LV;
             StackSem.push(LV_);
-            fprintf(out,"\tLOAD_REF %d\n",p->_.Var.nIndex);
             break;
         case MA_RULE:
-            fprintf(out,"\tDUP\n");
             break;
         case E_LV_EQUAL_RULE:
             E1_ = StackSem.top();
@@ -930,8 +876,6 @@ void semantics(int rule){
             
             E0_._.F.type = E1_._.E.type;
             StackSem.push(E0_);
-            fprintf(out,"\tSTORE_REF %d",t->_.Type.nSize);
-            fprintf(out,"\tDE_REF %d",t->_.Type.nSize);
             break;
         case MC_RULE:
             IDU_ = StackSem.top();
@@ -1035,7 +979,6 @@ void semantics(int rule){
             }
             F_.nont = F;
             StackSem.push(F_);
-            fprintf(out,"\tCALL %d\n",f->_.Function.nIndex);
             break;
         default:
             break;
